@@ -2,6 +2,7 @@ library(rvest)
 library(lubridate)
 
 # Define the url and read the page
+# A for loop could be created to store data from all cities
 url <- 'http://www.tankille.fi/tampere/'
 webpage <- read_html(url)
 
