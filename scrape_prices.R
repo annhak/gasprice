@@ -61,4 +61,5 @@ averages <- data.frame(
 
 write.table(
   averages, file = "averages.txt", sep = ",", 
-  row.names = FALSE, col.names = FALSE, quote = FALSE, append = TRUE)
+  row.names = FALSE, col.names = FALSE, quote = FALSE, append = TRUE
+)
