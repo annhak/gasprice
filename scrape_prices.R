@@ -9,7 +9,9 @@ webpage <- read_html(url)
 
 # Create a table of the first tab (95E) ([[1]] takes the df from list). Parse datetimes
 t <- html_table(html_nodes(webpage, "table")[1])[[1]]
-t$time <- ymd_hms(Sys.time() - as.numeric(substring(t$Päivitetty, 1, 1))*60*60)
+t$Päivitetty <- gsub("juuri nyt", 0, t$Päivitetty)
+t$Päivitetty <- gsub("tunti sitten", 1, t$Päivitetty)
+t$time <- ymd_hms(Sys.time() - as.numeric(gsub("[^0-9]", "", t$Päivitetty))*60*60)
 
 # Create the scraped price df
 prices <- data.frame(
@@ -32,13 +34,13 @@ new_prices <- prices[as.numeric(prices$time) > (max_time + 60*60),]
 
 if (dim(new_prices)[1] > 0) {
   print("Saving new rows:") 
-  print(paste(prices$station))
+  print(paste(new_prices$station))
   # Bind new rows to existing data
-  all_prices <- rbind(prices, new_prices)
+  all_prices <- rbind(file_content, new_prices)
   
   # Create a new file with the current unix time in the file name
   name <- paste("prices", floor(as.numeric(Sys.time())), ".txt", sep = "")
-  write.table(prices, file = name, sep = ",", row.names = FALSE, quote = FALSE)
+  write.table(all_prices, file = name, sep = ",", row.names = FALSE, quote = FALSE)
 }
 
 #### Store also average prices ####
